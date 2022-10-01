@@ -1,7 +1,7 @@
 {
     "name": "es-static-build",
-    "version": "1.0.0",
-    "description": "CLI tool for statically rendering javascript applications from a single object.",
+    "version": "1.0.1",
+    "description": "Simple CLI tool for statically rendering javascript applications from a single object.",
     "main": "index.js",
     "bin": "./index.js",
     "repository": {

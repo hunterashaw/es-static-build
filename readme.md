@@ -8,7 +8,7 @@ CLI tool for statically rendering javascript applications from a single object.
 
 Install 'react' or 'preact' for JSX support:
 
-`npm i preact`
+`npm i preact preact-render-to-string`
 
 ## Usage
 

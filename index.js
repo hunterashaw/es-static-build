@@ -2,6 +2,7 @@
 const esbuild = require('esbuild')
 const { program } = require('commander')
 const fs = require('fs')
+const { resolve } = require('path')
 
 async function run() {
     const options = program
@@ -13,13 +14,16 @@ async function run() {
         .parse()
         .opts()
 
-    const {
+    let {
         i: input,
         o: output,
         w,
         Jsx: jsxImportSource,
         Ext: defaultExtension
     } = options
+
+    output = output.endsWith('/') ? output : `${output}/`
+    const temp = resolve(`${output}temp.js`)
 
     function renderDirectory(directory, root) {
         if (!fs.existsSync(root)) fs.mkdirSync(root)
@@ -39,18 +43,15 @@ async function run() {
     }
 
     function render() {
-        delete require.cache[require.resolve(`./dist/temp.js`)]
-        const directories = require(`./dist/temp.js`).default
-        renderDirectory(
-            directories,
-            output.endsWith('/') ? output : `${output}/`
-        )
+        delete require.cache[temp]
+        const directory = require(temp).default
+        renderDirectory(directory, output)
         console.log('Rendered.')
-        fs.rmSync('./dist/temp.js')
+        fs.rmSync(temp)
     }
 
     await esbuild.build({
-        outfile: './dist/temp.js',
+        outfile: temp,
         entryPoints: [input],
         bundle: true,
         format: 'cjs',
