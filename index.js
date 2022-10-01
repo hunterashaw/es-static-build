@@ -46,6 +46,7 @@ async function run() {
             output.endsWith('/') ? output : `${output}/`
         )
         console.log('Rendered.')
+        fs.rmSync('./dist/temp.js')
     }
 
     await esbuild.build({
