@@ -1,0 +1,21 @@
+{
+    "name": "es-static-build",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "bin": "./index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hunterashaw/es-static-build.git"
+    },
+    "author": "Hunter Shaw",
+    "license": "ISC",
+    "dependencies": {
+        "commander": "^9.4.1",
+        "esbuild": "^0.15.10"
+    },
+    "devDependencies": {
+        "preact": "^10.11.0",
+        "preact-render-to-string": "^5.2.4"
+    }
+}
