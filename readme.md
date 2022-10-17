@@ -28,8 +28,8 @@ export default {
 
 Run CLI tool with input and output directories:
 
-`npx ex-static-build -i src/index.jsx -o dist`
+`npx es-static-build -i src/index.jsx -o dist`
 
 To rebuild on file change:
 
-`npx ex-static-build -w -i src/index.jsx -o dist`
+`npx es-static-build -w -i src/index.jsx -o dist`
