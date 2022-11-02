@@ -33,3 +33,17 @@ Run CLI tool with input and output directories:
 To rebuild on file change:
 
 `npx es-static-build -w -i src/index.jsx -o dist`
+
+You can provide a JSON config file to override the default build configuration options:
+
+esbuild-config.json:
+
+```
+{
+    "loader": {
+        ".gql": "text"
+    }
+}
+```
+
+`npx es-static-build -i src/index.jsx -o dist -c esbuild-config.json`

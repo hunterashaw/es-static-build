@@ -8,8 +8,11 @@ async function run() {
     const options = program
         .requiredOption('-i <path>', 'Input file')
         .requiredOption('-o <path>', 'Output directory')
+        .option(
+            '-c <path>',
+            'Provide additional json configuration file for esbuild.'
+        )
         .option('-w', 'Watch & rebuild on file change')
-        .option('-jsx <package>', 'JSX import source', 'preact')
         .option('-ext <extension>', 'Default extension', '.html')
         .parse()
         .opts()
@@ -17,8 +20,8 @@ async function run() {
     let {
         i: input,
         o: output,
+        c: configPath,
         w,
-        Jsx: jsxImportSource,
         Ext: defaultExtension
     } = options
 
@@ -43,14 +46,19 @@ async function run() {
     }
 
     function render() {
-        delete require.cache[temp]
+        if (require.cache[temp]) delete require.cache[temp]
         const directory = require(temp).default
         renderDirectory(directory, output)
         console.log('Rendered.')
-        fs.rmSync(temp)
+        try {
+            fs.rmSync(temp)
+        } catch (e) {}
     }
 
-    await esbuild.build({
+    const config = configPath
+        ? JSON.parse(fs.readFileSync(configPath, 'utf8'))
+        : {}
+    const defaultConfig = {
         outfile: temp,
         entryPoints: [input],
         bundle: true,
@@ -65,9 +73,16 @@ async function run() {
               }
             : undefined,
         jsx: 'automatic',
-        jsxImportSource
-    })
-    render()
+        jsxImportSource: 'preact'
+    }
+    const constantKeys = ['outfile', 'entryPoints', 'watch']
+    for (const key in defaultConfig)
+        if (constantKeys.includes(key) || config[key] === undefined)
+            config[key] = defaultConfig[key]
+
+    const { errors } = await esbuild.build(config)
+    if (errors.length) console.error(errors)
+    else render()
 }
 
 run()
